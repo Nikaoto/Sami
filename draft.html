@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!--Import materialize.css-->
+  <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <style>
+  	.inputfile {
+			width: 0.1px;
+			height: 0.1px;
+			opacity: 0;
+			overflow: hidden;
+			position: absolute;
+			z-index: -1;
+  	}
+  	.inputfile {
+  		cursor: pointer;
+  	}
+
+  	#main {
+  		display: flex;
+  		flex-wrap: wrap;
+  		align-content: center;
+  	}
+	</style>
+</head>
+
+<header>
+<!--Title-->
+<div class="row">
+	<div class="col s3"></div>
+	<div class="col s6" style="text-align: center;">
+		<h1 class="blue-text">Sami</h1>
+		<p class="flow-text">
+			Lorem Ipsum Dolor Sit Amet
+		</p>
+	</div>
+	<div class="col s3"></div>
+</div>
+</header>
+
+<body>
+	<div id="main">
+		<div class="container">
+			<div class="row">
+	  		<div class="col s6">
+	  				<input type="file" name="file" id="imageinput" class="inputfile" multiple/>
+	  				<label for="imageinput" class="btn waves-effect waves-light">
+	  					Choose Files
+	  				</label>
+	  		</div>
+	  		<div class="col s3">
+	  			<button onclick="loadfiles()"> ASD </button>
+	  		</div>
+	  	</div>
+		</div>
+	</div>
+
+  <!--Import jQuery before materialize.js-->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="js/materialize.min.js"></script>
+
+  <!--Main-->
+  <script>
+  	function loadfiles() {
+		    var imageFiles = document.getElementById("imageinput"),
+		    filesLength = imageFiles.files.length;
+		    let image = document.createElement("img")
+
+		    for (var i = 0; i < filesLength; i++) {
+
+		      document.write(imageFiles.files[i].name);
+		    }
+		}
+  </script>
+</body>
+</html>
