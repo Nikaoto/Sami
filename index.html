@@ -74,7 +74,7 @@
 			<!--Search-->
 			<div class="row">
 				<div class="col s12">
-					<button onclick="addItem()" class="waves-effect waves-light btn">Populate List</button>
+					<button onclick="addItem('img/img2.jpg')" class="waves-effect waves-light btn">Add Item</button>
 				</div>
 		 		<div id="resource-list" class="col s12">
 				</div>
@@ -88,13 +88,10 @@
 
   <!--Main-->
   <script>
-/*  	$(document).ready(() => {
-	    $("#btn1").click(() => {
-	        $("resource-list").append("<img class='resource hover-shadow' src='img/img1.jpg'>");
-	    });*/
 
-  	function addItem() {
-  		let resourceItem = "<img class='resource hover-shadow expandOpen' src='img/img1.jpg'>"
+  	
+  	function addItem(source) {
+  		let resourceItem = "<img class='resource hover-shadow slideLeftFadeIn' src=" + source + ">"
 			$("#resource-list").append(resourceItem)
   	}
 
