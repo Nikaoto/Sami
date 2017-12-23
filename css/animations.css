@@ -143,8 +143,8 @@ slideLeftFadeIn
 */
 
 .slideLeftFadeIn{
-	animation-name: slideLeft;
-	-webkit-animation-name: slideLeft;	
+	animation-name: slideLeftFadeIn;
+	-webkit-animation-name: slideLeftFadeIn;	
 
 	animation-duration: 1s;	
 	-webkit-animation-duration: 1s;
@@ -155,23 +155,41 @@ slideLeftFadeIn
 	visibility: visible !important;	
 }
 
+@-webkit-keyframes slideLeftFadeIn{
+	0% {
+		-webkit-transform: translateX(150%);
+		opacity: 0.0;
+	}
+	50%{
+		-webkit-transform: translateX(-6%);
+		opacity: 1;
+	}
+	65%{
+		-webkit-transform: translateX(2%);
+	}
+	80%{
+		-webkit-transform: translateX(0%);	
+	}
+	100% {
+		-webkit-transform: translateX(0%);
+		opacity: 1;	
+	}
+}
+
 @keyframes slideLeftFadeIn{
 	0% {
 		transform: translateX(150%);
 		opacity: 0.0;
 	}
 	50%{
-		transform: translateX(-8%);
+		transform: translateX(-6%);	
+		opacity: 1;
 	}
 	65%{
-		transform: translateX(4%);
+		transform: translateX(2%);	
 	}
-	80%{
-		transform: translateX(-4%);
-		opacity: 1;	
-	}
-	95%{
-		transform: translateX(2%);
+	80% {
+		transform: translateX(0%);	
 	}
 	100% {
 		transform: translateX(0%);
