@@ -88,6 +88,10 @@
 
   <!--Main-->
   <script>
+  	let imageDir = "img/"
+  	let images = ["img1.jpg", "img2.jpg", "img3.jpg", "img4.gif", "img5.gif", "img6.gif", 
+  		"img7.gif", "img8.gif", "img9.gif"]
+
   	function readURL(input) {
 	    if (input.files && input.files[0]) {
         var reader = new FileReader();
@@ -98,29 +102,21 @@
 	    }
 	  }
 
+	  $(document).ready(() => {
+			images = images.map((x) => x = imageDir + x)
+	  })
+
 	  function getRandomImage() {
-	  	let imageDir = "img/"
-	  	let images = ["img1.jpg", "img2.jpg", "img3.jpg", "img4.gif"]
-	  	images = images.map((x) => x = imageDir + x)
-	  	console.log(images)
-	  	return images[Math.floor(Math.random()*images.length)]
+	  	let index = Math.floor(Math.random()*images.length)
+	  	let removedItem = images[index]
+	  	images.splice(index, 1)
+	  	return removedItem
 	  }
 
   	function addItem(source) {
   		let resourceItem = "<img class='resource hover-shadow slideLeftFadeIn' src=" + source + ">"
 			$("#resource-list").append(resourceItem)
   	}
-
-  	function loadfiles() {
-		    let imageFiles = document.getElementById("imageinput"),
-		    filesLength = imageFiles.files.length;
-		    let image = document.createElement("img")
-
-		    for (var i = 0; i < filesLength; i++) {
-
-		      document.write(imageFiles.files[i].name);
-		    }
-		}
   </script>
 </body>
 </html>
