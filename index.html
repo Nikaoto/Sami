@@ -8,33 +8,15 @@
 
   <!--Let browser know website is optimized for mobile-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="css/main.css">
 </head>
-
-<style>
-html {
-	font-family: Roboto, system-ui, '.SFNSText-Regular'
-}
-#content-title {
-	font-size: 30px;
-	margin-bottom: 0px;
-}
-#content-textarea {
-	font-size: 18px;
-}
-#divider {
-	margin-top: 0px;
-}
-.justify {
-	text-align: justify;
-}
-</style>
 
 <header>
 <!--Title-->
 <div class="row">
 	<div class="col s3"></div>
 	<div class="col s6" style="text-align: center;">
-		<h1 class="amber-text text-darken-3">Slami</h1>
+		<h2 class="amber-text text-darken-3">Slami</h2>
 	</div>
 	<div class="col s3"></div>
 </div>
@@ -69,12 +51,35 @@ html {
   		</div>
 		</div>
 
-		<!--Search-->
-		<div id="resource-list" class="col s6">
-			<label for="imageinput" class="btn waves-effect waves-light">
-				Choose Files
-			</label>
-			<input type="file" name="file" id="imageinput" class="inputfile" multiple/>
+		<div id="right" class="col s6">
+			<!--File Upload -->
+			<div class="row">
+				<div id="file-upload" class="col s10">
+					<form action="#">
+						<div class="file-field input-field">
+							<div class="btn">
+								<span>Choose Files</span>
+								<input type="file" multiple>
+							</div>
+							<div class="file-path-wrapper">
+								<input class="file-path validate" type="text">
+							</div>
+						</div>
+					</form>
+				</div>		
+			</div>
+
+			<!--Search-->
+			<div class="row">
+<!-- 				<div class="col s12">
+					<button onclick="populateList()" class="waves-effect waves-light btn">Populate List</button>
+				</div> -->
+		 		<div id="resource-list" class="col s12">
+		 			<img class="responsive-img resource" src="img/img1.jpg">
+		 			<img class="responsive-img resource" src="img/img2.jpg">
+		 			<img class="responsive-img resource" src="img/img3.jpg">
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -84,8 +89,12 @@ html {
 
   <!--Main-->
   <script>
+  	function populateList() {
+  		let images = 
+  	}
+
   	function loadfiles() {
-		    var imageFiles = document.getElementById("imageinput"),
+		    let imageFiles = document.getElementById("imageinput"),
 		    filesLength = imageFiles.files.length;
 		    let image = document.createElement("img")
 
