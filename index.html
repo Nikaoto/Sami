@@ -9,6 +9,8 @@
   <!--Let browser know website is optimized for mobile-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
 <header>
@@ -71,21 +73,10 @@
 
 			<!--Search-->
 			<div class="row">
-<!-- 				<div class="col s12">
-					<button onclick="populateList()" class="waves-effect waves-light btn">Populate List</button>
-				</div> -->
+				<div class="col s12">
+					<button onclick="addItem()" class="waves-effect waves-light btn">Populate List</button>
+				</div>
 		 		<div id="resource-list" class="col s12">
-		 			<img class="resource hover-shadow" src="img/img1.jpg">
-		 			<img class="resource hover-shadow" src="img/img2.jpg">
-		 			<img class="resource hover-shadow" src="img/img3.jpg">
-		 			<img class="resource hover-shadow" src="img/img3.jpg">
-		 			<img class="resource hover-shadow" src="img/img3.jpg">
-		 			<img class="resource hover-shadow" src="img/img3.jpg">
-		 			<img class="resource hover-shadow" src="img/img3.jpg">
-		 			<img class="resource hover-shadow" src="img/img3.jpg">
-		 			<img class="resource hover-shadow" src="img/img3.jpg">
-		 			<img class="resource hover-shadow" src="img/img3.jpg">
-		 			<img class="resource hover-shadow" src="img/img3.jpg">
 				</div>
 			</div>
 		</div>
@@ -97,8 +88,14 @@
 
   <!--Main-->
   <script>
-  	function populateList() {
-  		
+/*  	$(document).ready(() => {
+	    $("#btn1").click(() => {
+	        $("resource-list").append("<img class='resource hover-shadow' src='img/img1.jpg'>");
+	    });*/
+
+  	function addItem() {
+  		let resourceItem = "<img class='resource hover-shadow expandOpen' src='img/img1.jpg'>"
+			$("#resource-list").append(resourceItem)
   	}
 
   	function loadfiles() {
