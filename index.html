@@ -13,9 +13,9 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
-<header>
+<header class="scene-element scene-element--fadeinright">
 <!--Title-->
-<div class="row">
+<div class="row"> <!-- scene class -->
 	<div class="col s3"></div>
 	<div class="col s6" style="text-align: center;">
 		<h2 class="amber-text text-darken-3">Slami</h2>
@@ -24,7 +24,7 @@
 </div>
 </header>
 
-<body>
+<body class="scene-element scene-element--fadeinright">
 	<div id="main" class="row">
 
 		<!--Editor-->
@@ -74,8 +74,8 @@
 			<!--Search-->
 			<div class="row">
 				<div class="col s12" style="margin-bottom: 10px">
-					<button onclick="addItem(getRandomImage())" class="waves-effect waves-light btn">Add Item</button>
-					<button onclick="" class="waves-effect waves-light btn" style="float: right;">Next</button>
+					<button style="display:none;" onclick="addItem(getRandomImage())" class="waves-effect waves-light btn">Add Item</button>
+					<button onclick="nextPage()" class="waves-effect waves-light btn" style="float: right;">Next</button>
 				</div>
 
 		 		<div id="resource-list" class="col s12">
@@ -137,17 +137,21 @@
 		itemIds.pop(itemIds.length-1)
 	}
 
-	$("#content-textarea").on("input", (e) => {
+	$("#content-textarea").bind("input propertychange", (e) => {
 		currentText = $("#content-textarea").val()
 		if (paragraphCount < getParaCount(currentText)) {
-			paragraphCount++
-			addItem()
-			console.log("ADD RESOURCE")			
+			for (i=0; i<=getParaCount(currentText) - paragraphCount; i++) {
+				paragraphCount++
+				addItem()
+				console.log("ADD RESOURCE")			
+			}
 		}
-		if (paragraphCount > getParaCount(currentText)) {
-			paragraphCount--
-			removeItem()
-			console.log("REMOVE RESOURCE")
+		if (paragraphCount >= getParaCount(currentText)) {
+			for (i=0; i<paragraphCount-getParaCount(currentText); i++) {
+				paragraphCount--
+				removeItem()
+				console.log("REMOVE RESOURCE")			
+			}
 		}
 	})
 
@@ -155,8 +159,8 @@
 		return (txt.match(/\n\n/g) || []).length
 	}
 
-	function onContentTextChange(content) {
-		console.log(content)
+	function nextPage() {
+		window.open("./draft.html", "_self")
 	}
   </script>
 </body>
