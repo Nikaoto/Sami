@@ -110,20 +110,20 @@
 	    }
 	  }
 
-	  function getRandomImage() {
-	  	if (images.length < 1) {
-	  		images = initImages()
-	  	}
-	  	let index = Math.floor(Math.random()*images.length)
-	  	let removedItem = images[index]
-	  	images.splice(index, 1)
-	  	return removedItem
-	  }
-
-  	function addItem(source) {
-  		let resourceItem = "<img class='resource hover-shadow slideLeftFadeIn' src=" + source + ">"
-			$("#resource-list").append(resourceItem)
+  function getRandomImage() {
+  	if (images.length < 1) {
+  		images = initImages()
   	}
+  	let index = Math.floor(Math.random()*images.length)
+  	let removedItem = images[index]
+  	images.splice(index, 1)
+  	return removedItem
+  }
+
+	function addItem(source) {
+		let resourceItem = "<img class='resource hover-shadow slideLeftFadeIn' src=" + source + ">"
+		$("#resource-list").append(resourceItem)
+	}
   </script>
 </body>
 </html>

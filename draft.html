@@ -10,6 +10,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
   <style>
+  	html {
+  		font-family: Roboto, system-ui, '.SFNSText-Regular';
+  	}
+
+  	@font-face {
+	    font-family: 'Kartuli';
+	    src: url("fonts/NotoSansGeorgian-Regular.ttf");
+		}
+
+  	@font-face {
+	    font-family: 'Kartuli-Bold';
+	    src: url("fonts/NotoSansGeorgian-Bold.ttf");
+		}
+
+  	#title {
+
+  	}
+
+  	#content {
+  		margin-top: 50px;
+  	}
+
   	.inputfile {
 			width: 0.1px;
 			height: 0.1px;
@@ -18,65 +40,163 @@
 			position: absolute;
 			z-index: -1;
   	}
+
   	.inputfile {
   		cursor: pointer;
-  	}
-
-  	#main {
-  		display: flex;
-  		flex-wrap: wrap;
-  		align-content: center;
   	}
 	</style>
 </head>
 
-<header>
-<!--Title-->
-<div class="row">
-	<div class="col s3"></div>
-	<div class="col s6" style="text-align: center;">
-		<h1 class="blue-text">Sami</h1>
-		<p class="flow-text">
-			Lorem Ipsum Dolor Sit Amet
-		</p>
-	</div>
-	<div class="col s3"></div>
-</div>
-</header>
-
-<body>
-	<div id="main">
-		<div class="container">
-			<div class="row">
-	  		<div class="col s6">
-	  				<input type="file" name="file" id="imageinput" class="inputfile" multiple/>
-	  				<label for="imageinput" class="btn waves-effect waves-light">
-	  					Choose Files
-	  				</label>
-	  		</div>
-	  		<div class="col s3">
-	  			<button onclick="loadfiles()"> ASD </button>
-	  		</div>
-	  	</div>
+<div class="container">
+	<!--Title-->
+	<div class="row" id="title">
+		<div class="col s12" style="text-align: center;">
+			<h1 class="blue-text">Slami</h1>
+			<h5>დააგენერირე ვიდეო სამ წამში</h5>
 		</div>
 	</div>
+	<!--Content-->
+	<div class="row" id="content">
+		<div class="col s6 center">
+			<input type="file" name="file" id="imageinput" class="inputfile" multiple/>
+			<label for="imageinput" class="btn waves-effect waves-light" onclick="">
+				ამოირჩიე ფაილები
+			</label>
+		</div>
+		<div class="col s6 center">
+			<button class="btn waves-effect waves-dark" onclick="generateVideo()">
+				დააგენერირე ვიდეო
+			</button>
+		</div>
+	</div>
+	<div class="row" id="result">
+		<div class="col s12 center">
+			<canvas id = "canvas" style="display:none" width="720" height="480"></canvas>
+			<br>
+			<video id="videoplayer" controls autoplay loop></video>
+			<br>
+		</div>
+	</div>
+</div>
 
-  <!--Import jQuery before materialize.js-->
-  <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-  <script type="text/javascript" src="js/materialize.min.js"></script>
+<!--Import jQuery before materialize.js-->
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="js/materialize.min.js"></script>
+<script src="js/whammy.js"></script>
 
-  <!--Main-->
-  <script>
-  	function loadfiles() {
-		    var imageFiles = document.getElementById("imageinput"),
-		    filesLength = imageFiles.files.length;
-		    let image = document.createElement("img")
+<script>
+	// Init
+	const fps = 15
+	const w = 720
+	const h = 480
+	var filesarr = []
+	var progress = 0
 
-		    for (var i = 0; i < filesLength; i++) {
+	// Fonts
+	const Kartuli = new FontFace('Kartuli', 'url(fonts/NotoSansGeorgian-Regular.ttf)');
+	const KartuliBold = new FontFace('Kartuli-Bold', 'url(fonts/NotoSansGeorgian-Bold.ttf)');
 
-		      document.write(imageFiles.files[i].name);
-		    }
+	Kartuli.load().then((font) => {
+	  document.fonts.add(font);
+
+	  console.log('Font loaded');
+	});
+
+	KartuliBold.load().then((font) => {
+	  document.fonts.add(font);
+
+	  console.log('Font loaded');
+	});
+
+	// Canvas
+	var canvas = document.getElementById("canvas")
+	canvas.width = w
+	canvas.height = h
+	var context = canvas.getContext("2d")
+	var sampleText = "Sample Text"
+
+	// Encoder
+	var video = new Whammy.Video(fps)
+
+
+	var imageinput = document.getElementById("imageinput")
+	imageinput.addEventListener("change", (e) => {
+		filesarr = e.target.files
+		console.log("imageinput change")
+		// TODO enable generate video btn
+	}, false)
+
+	function generateVideo() {
+		console.log("generateVideo()")
+		if (filesarr.length > 0) {
+			console.log("filesarr.length > 0")
+			for (i = 0; i < filesarr.length; i++) {
+				var file = filesarr[i]
+				if (file.type.match(/image.*/)) {
+					console.log(file)
+					process(file)
+				}
+			}
 		}
-  </script>
-</body>
+	}
+
+	function process(file) {
+		console.log("process")
+		var reader = new FileReader()
+		reader.onload = function(event) {
+			console.log("reader.onload")	
+			var dataUri = event.target.result
+			var img = new Image()
+
+			img.onload = function() {
+				console.log("img.onload")
+				// Show
+				for (i = 0; i <= fps; i++) {
+					context.drawImage(img, 0, 0, canvas.width, canvas.height)
+					drawText(context, "გამარჯვება", "30px Kartuli-Bold", 50, 50)
+					video.add(context)
+					context.clearRect(0, 0, context.canvas.width, context.canvas.height)
+				}
+
+				progress++
+				console.log(`progress=${progress}; l=${filesarr.length}`)
+				if (progress == filesarr.length) {
+					finalizeVideo()
+				}
+			}
+			img.src = dataUri
+		}
+    reader.onerror = function(event) {
+		console.error("File could not be read! Code " + event.target.error.code)}
+  	reader.readAsDataURL(file)
+	}
+
+	function drawText(ctx, txt, font, x, y) {
+		const hmod = 1.7
+		const paddingLeft = 5
+		const paddingRight = 10
+		const paddingTop = 5
+		const paddingBottom = 5
+
+    ctx.font = font;
+    ctx.textBaseline = 'top';
+    ctx.fillStyle = '#ffffff';
+    
+    var width = ctx.measureText(txt).width;
+    ctx.fillRect(x-paddingLeft, y-paddingTop, width+paddingRight, parseInt(font, 10)*hmod);
+    
+    ctx.fillStyle = '#000';
+    ctx.fillText(txt, x, y);    
+	}
+
+	function finalizeVideo() {
+		console.log("finalizing")
+		//var startTime = +new Date
+		video.compile(false, (output) => {
+			console.log(output)
+			var url = window.URL.createObjectURL(output);
+			document.getElementById("videoplayer").src = url
+		})
+	}
+</script>
 </html>
