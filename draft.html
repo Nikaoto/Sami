@@ -57,16 +57,21 @@
 	</div>
 	<!--Content-->
 	<div class="row" id="content">
-		<div class="col s6 center">
+		<div class="col s4 center">
 			<input type="file" name="file" id="imageinput" class="inputfile" multiple/>
 			<label for="imageinput" class="btn waves-effect waves-light" onclick="">
-				ამოირჩიე ფაილები
+				ამოირჩიე
 			</label>
 		</div>
-		<div class="col s6 center">
+		<div class="col s4 center">
 			<button class="btn waves-effect waves-dark" onclick="generateVideo()">
-				დააგენერირე ვიდეო
+				დააგენერირე
 			</button>
+		</div>
+		<div class="col s4 center">
+			<a id="savebtn" download="video.webm" class="btn waves-effect waves-dark">
+				გააზიარე
+			</a>
 		</div>
 	</div>
 	<div class="row" id="result">
@@ -191,11 +196,11 @@
 
 	function finalizeVideo() {
 		console.log("finalizing")
-		//var startTime = +new Date
 		video.compile(false, (output) => {
 			console.log(output)
 			var url = window.URL.createObjectURL(output);
 			document.getElementById("videoplayer").src = url
+			document.getElementById("savebtn").href = url
 		})
 	}
 </script>
