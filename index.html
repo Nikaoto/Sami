@@ -89,9 +89,13 @@
   <script type="text/javascript" src="js/materialize.min.js"></script>
 
   <!--Main-->
-  <script type="text/javascript" src="js/generator.js"></script>
+  <!-- <script type="text/javascript" src="js/generator.js"></script> -->
   <script>
   	let imageDir = "img/"
+  	let currentText = ""
+  	let paragraphCount = 0
+  	let itemIds = []
+  	let shownItems = []
   	
   	function initImages() {
   		return ["img1.jpg", "img2.jpg", "img3.jpg", "img4.gif", "img5.gif", "img6.gif"]
@@ -120,9 +124,39 @@
   	return removedItem
   }
 
-	function addItem(source) {
-		let resourceItem = "<img class='resource hover-shadow slideLeftFadeIn' src=" + source + ">"
+	function addItem(source = getRandomImage()) {
+		let id = itemIds.length.toString() + "-resource-item"
+		itemIds.push(id)
+		let resourceItem = "<img id="+id+" class='resource hover-shadow slideLeftFadeIn' src="+source+">"
 		$("#resource-list").append(resourceItem)
+	}
+
+	function removeItem() {
+		$("#"+itemIds[itemIds.length-1].toString()).remove()
+		console.log("removing "+ (itemIds.length-1).toString())
+		itemIds.pop(itemIds.length-1)
+	}
+
+	$("#content-textarea").on("input", (e) => {
+		currentText = $("#content-textarea").val()
+		if (paragraphCount < getParaCount(currentText)) {
+			paragraphCount++
+			addItem()
+			console.log("ADD RESOURCE")			
+		}
+		if (paragraphCount > getParaCount(currentText)) {
+			paragraphCount--
+			removeItem()
+			console.log("REMOVE RESOURCE")
+		}
+	})
+
+	function getParaCount(txt) {
+		return (txt.match(/\n\n/g) || []).length
+	}
+
+	function onContentTextChange(content) {
+		console.log(content)
 	}
   </script>
 </body>
