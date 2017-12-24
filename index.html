@@ -35,7 +35,7 @@
 			      <div class="row">
 			        <div class="input-field col s12">
 			          <input id="content-title" type="text">
-			          <label for="content-title">Title</label>
+			          <label for="content-title">სათაური</label>
 			        </div>
 		      	</div>
 		      </span>
@@ -60,7 +60,7 @@
 					<form action="#">
 						<div class="file-field input-field">
 							<div class="btn">
-								<span>Choose File</span>
+								<span>ამოირჩიე ფაილები</span>
 								<input type="file" onchange="readURL(this)">
 							</div>
 							<div class="file-path-wrapper">
@@ -75,7 +75,7 @@
 			<div class="row">
 				<div class="col s12" style="margin-bottom: 10px">
 					<button style="display:none;" onclick="addItem(getRandomImage())" class="waves-effect waves-light btn">Add Item</button>
-					<button onclick="nextPage()" class="waves-effect waves-light btn" style="float: right;">Next</button>
+					<button onclick="nextPage()" class="waves-effect waves-light btn" style="float: right;">შემდეგი</button>
 				</div>
 
 		 		<div id="resource-list" class="col s12">
@@ -95,10 +95,11 @@
   	let currentText = ""
   	let paragraphCount = 0
   	let itemIds = []
-  	let shownItems = []
+  	let resourceList = []
   	
   	function initImages() {
-  		return ["img1.jpg", "img2.jpg", "img3.jpg", "img4.gif", "img5.gif", "img6.gif"]
+  		return ["img1.jpg", "img2.jpg", "img3.jpg", "img4.gif", "img5.gif", "img6.gif", "img7.jpg", "img8.jpg",
+  		"img11.jpg", "img9.jpg", "img10.jpg"]
   			.map((x) => x = imageDir + x)
   	}
 
@@ -150,7 +151,7 @@
 			for (i=0; i<paragraphCount-getParaCount(currentText); i++) {
 				paragraphCount--
 				removeItem()
-				console.log("REMOVE RESOURCE")			
+				console.log("REMOVE RESOURCE")	
 			}
 		}
 	})
@@ -160,6 +161,8 @@
 	}
 
 	function nextPage() {
+		let headingList = $("#content-textarea").val().split("\n\n")
+		sessionStorage.headingList = headingList
 		window.open("./draft.html", "_self")
 	}
   </script>

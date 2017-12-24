@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="css/animations.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
+
   <style>
   	html {
   		font-family: Roboto, system-ui, '.SFNSText-Regular';
@@ -88,7 +89,7 @@
 		<div class="col s12 center">
 			<canvas id = "canvas" style="display:none" width="720" height="480"></canvas>
 			<br>
-			<video id="videoplayer" controls autoplay loop></video>
+			<video id="videoplayer" controls autoplay loop style="box-shadow: 0px 3px 13px 3px rgba(0,0,0,0.2)"></video>
 			<br>
 		</div>
 	</div>
@@ -101,9 +102,10 @@
 
 <script>
 	// Init
-	const fps = 15
+	var fps = 20
 	const w = 720
 	const h = 480
+	let passedHeadings = []
 	var filesarr = []
 	var progress = 0
 
@@ -123,12 +125,18 @@
 	  console.log('Font loaded');
 	});
 
+	$(document).ready(() => {
+		 passedHeadings = sessionStorage.headingList.split(",")
+		 //fps = (passedHeadings.map((x) => x.split(" ")).filter((x) => x.length < 3)).length * 15
+		 console.log("fps="+fps)
+		 console.log(passedHeadings)
+	})
+
 	// Canvas
 	var canvas = document.getElementById("canvas")
 	canvas.width = w
 	canvas.height = h
 	var context = canvas.getContext("2d")
-	var sampleText = "Sample Text"
 
 	// Encoder
 	var video = new Whammy.Video(fps)
@@ -143,7 +151,9 @@
 
 	function generateVideo() {
 		console.log("generateVideo()")
+		console.log(filesarr)
 		if (filesarr.length > 0) {
+			$("#progressbarid").attr("style", "display: block;")
 			console.log("filesarr.length > 0")
 			for (i = 0; i < filesarr.length; i++) {
 				var file = filesarr[i]
@@ -152,6 +162,8 @@
 					process(file)
 				}
 			}
+		} else {
+			filesarr = []
 		}
 	}
 
@@ -168,11 +180,13 @@
 				// Show
 				for (i = 0; i <= fps; i++) {
 					context.drawImage(img, 0, 0, canvas.width, canvas.height)
-					drawText(context, "გამარჯვება", "30px Kartuli-Bold", 50, 50)
+					console.log("progress="+progress.toString())
+					console.log("h[progress]="+passedHeadings[progress])
+					console.log("passedHeadings="+passedHeadings)
+					drawText(context, passedHeadings[progress], "30px Kartuli-Bold", 50, 50)
 					video.add(context)
 					context.clearRect(0, 0, context.canvas.width, context.canvas.height)
 				}
-
 				progress++
 				console.log(`progress=${progress}; l=${filesarr.length}`)
 				if (progress == filesarr.length) {
