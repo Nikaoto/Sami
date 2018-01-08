@@ -1,5 +1,5 @@
 html {
-	font-family: Roboto, system-ui, '.SFNSText-Regular'
+	font-family: Roboto, system-ui, '.SFNSText-Regular';
 }
 
 .justify {
@@ -35,6 +35,14 @@ img.hover-shadow {
 }
 .resource {
 	max-width: 120px;
+}
+
+#suggester {
+	margin-bottom: 10px;
+}
+
+#next-page-btn {
+	float: right;
 }
 
 /* For Mobile */
