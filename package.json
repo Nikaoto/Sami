@@ -1,0 +1,26 @@
+{
+  "name": "sami",
+  "version": "0.0.8",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nikaoto/Sami.git"
+  },
+  "author": "Nikaoto",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nikaoto/Sami/issues"
+  },
+  "homepage": "https://github.com/Nikaoto/Sami#readme",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.2",
+    "request": "^2.83.0",
+    "socket.io": "^2.0.4"
+  }
+}
