@@ -14,16 +14,6 @@ $(() => {
 
 	let images = initImages()
 
-	function readURL(input) {
-	  if (input.files && input.files[0]) {
-	    var reader = new FileReader();
-	    reader.onload = (e) => {
-	  			addItem(e.target.result)
-	    };
-	  	reader.readAsDataURL(input.files[0])
-	  }
-	}
-
 	function getRandomImage() {
 		if (images.length < 1) {
 			images = initImages()
@@ -72,9 +62,27 @@ $(() => {
 		return (txt.match(/\n\n/g) || []).length
 	}
 
+
+	$("#choose-files-btn").bind("change", (e) => {
+		let input = e.target
+		if (input.files && input.files[0]) {
+			
+			let values = Object.keys(input.files).map((k) => input.files[k])
+			console.log("Object.keys =", Object.keys(input.files))
+			console.log("values =", values)
+
+			values.map((file) => {			
+				let reader = new FileReader()			
+	    	reader.onload = (e) => addItem(e.target.result)
+	  		reader.readAsDataURL(file)
+			})
+	  }
+	})
+
 	$("#next-page-btn").on("click", () => {
 		let headingList = $("#content-textarea").val().split("\n\n")
 		sessionStorage.headingList = headingList
 		window.open("../draft.html", "_self")
 	})
+
 })
