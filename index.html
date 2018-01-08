@@ -1,33 +1,32 @@
 <!DOCTYPE html>
 <html class="blue-grey lighten-1">
 <head>
-  <!--Import Google Icon Font-->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <!--Import materialize.css-->
-  <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
-
   <!--Let browser know website is optimized for mobile-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/animations.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+ 
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+  <link rel="stylesheet" href="css/materialize.min.css"/>
+  <link rel="stylesheet" href="css/main.css"/>
+  <link rel="stylesheet" href="css/animations.css"/>
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="js/materialize.min.js"></script>
+  <script src="js/index.js"></script>
 </head>
 
 <header class="scene-element scene-element--fadeinright">
-<!--Title-->
-<div class="row"> <!-- scene class -->
-	<div class="col s3"></div>
-	<div class="col s6" style="text-align: center;">
-		<h2 class="amber-text text-darken-3">Slami</h2>
+	<div class="row">
+		<div class="col s6 offset-s3" style="text-align: center;">
+			<h2 class="amber-text text-darken-3">Slami</h2>
+		</div>
 	</div>
-	<div class="col s3"></div>
-</div>
 </header>
 
 <body class="scene-element scene-element--fadeinright">
 	<div id="main" class="row">
 
-		<!--Editor-->
+		<!-- Editor -->
 		<div id="editor" class="col s6">
 			<div class="card z-depth-5">
 				<div class="card-content black-text">
@@ -53,9 +52,12 @@
   		</div>
 		</div>
 
-		<div id="right" class="col s6">
-			<!--File Upload -->
+		<!-- Resourcer -->
+		<div id="resourcer" class="col s6">
+
+			<!-- File Upload -->
 			<div class="row">
+
 				<div id="file-upload" class="col s10">
 					<form action="#">
 						<div class="file-field input-field">
@@ -68,103 +70,25 @@
 							</div>
 						</div>
 					</form>
-				</div>		
-			</div>
-
-			<!--Search-->
-			<div class="row">
-				<div class="col s12" style="margin-bottom: 10px">
-					<button style="display:none;" onclick="addItem(getRandomImage())" class="waves-effect waves-light btn">Add Item</button>
-					<button onclick="nextPage()" class="waves-effect waves-light btn" style="float: right;">შემდეგი</button>
 				</div>
 
-		 		<div id="resource-list" class="col s12">
+			</div>
+
+			<div class="row">
+
+				<div id="suggester" class="col s12">
+					<!-- <button style="display:none;" onclick="addItem(getRandomImage())" class="waves-effect waves-light btn">Add Item</button> -->
+					<button id="next-page-btn" class="waves-effect waves-light btn">შემდეგი</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col s12">
+			 		<div id="resource-list" class="col s12">
+			 			<!-- Resources appear here -->
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-
-  <!--Import jQuery before materialize.js-->
-  <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-  <script type="text/javascript" src="js/materialize.min.js"></script>
-
-  <!--Main-->
-  <!-- <script type="text/javascript" src="js/generator.js"></script> -->
-  <script>
-  	let imageDir = "img/"
-  	let currentText = ""
-  	let paragraphCount = 0
-  	let itemIds = []
-  	let resourceList = []
-  	
-  	function initImages() {
-  		return ["img1.jpg", "img2.jpg", "img3.jpg", "img4.gif", "img5.gif", "img6.gif", "img7.jpg", "img8.jpg",
-  		"img11.jpg", "img9.jpg", "img10.jpg"]
-  			.map((x) => x = imageDir + x)
-  	}
-
-  	let images = initImages()
-
-  	function readURL(input) {
-	    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = (e) => {
-      			addItem(e.target.result)
-        };
-      	reader.readAsDataURL(input.files[0])
-	    }
-	  }
-
-  function getRandomImage() {
-  	if (images.length < 1) {
-  		images = initImages()
-  	}
-  	let index = Math.floor(Math.random()*images.length)
-  	let removedItem = images[index]
-  	images.splice(index, 1)
-  	return removedItem
-  }
-
-	function addItem(source = getRandomImage()) {
-		let id = itemIds.length.toString() + "-resource-item"
-		itemIds.push(id)
-		let resourceItem = "<img id="+id+" class='resource hover-shadow slideLeftFadeIn' src="+source+">"
-		$("#resource-list").append(resourceItem)
-	}
-
-	function removeItem() {
-		$("#"+itemIds[itemIds.length-1].toString()).remove()
-		console.log("removing "+ (itemIds.length-1).toString())
-		itemIds.pop(itemIds.length-1)
-	}
-
-	$("#content-textarea").bind("input propertychange", (e) => {
-		currentText = $("#content-textarea").val()
-		if (paragraphCount < getParaCount(currentText)) {
-			for (i=0; i<=getParaCount(currentText) - paragraphCount; i++) {
-				paragraphCount++
-				addItem()
-				console.log("ADD RESOURCE")			
-			}
-		}
-		if (paragraphCount >= getParaCount(currentText)) {
-			for (i=0; i<paragraphCount-getParaCount(currentText); i++) {
-				paragraphCount--
-				removeItem()
-				console.log("REMOVE RESOURCE")	
-			}
-		}
-	})
-
-	function getParaCount(txt) {
-		return (txt.match(/\n\n/g) || []).length
-	}
-
-	function nextPage() {
-		let headingList = $("#content-textarea").val().split("\n\n")
-		sessionStorage.headingList = headingList
-		window.open("./draft.html", "_self")
-	}
-  </script>
 </body>
 </html>
