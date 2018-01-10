@@ -1,4 +1,5 @@
 $(() => {
+	const IMPORTANT_WORD_LENGTH = 5
 	let imageDir = "../img/"
 	let currentText = ""
 	let paragraphCount = 0
@@ -31,6 +32,8 @@ $(() => {
 		$("#resource-list").append(resourceItem)
 	}
 
+	socket.on("scrape result", result => { addItem(result.url) })
+
 	function removeItem() {
 		$("#"+itemIds[itemIds.length-1].toString()).remove()
 		console.log("removing "+ (itemIds.length-1).toString())
@@ -43,10 +46,10 @@ $(() => {
 		if (paragraphCount < getParaCount(currentText)) {
 			for (i=0; i<=getParaCount(currentText) - paragraphCount; i++) {
 				paragraphCount++
-				// TODO - emit request
-				addItem()
 
-				console.log("ADD RESOURCE")
+				let paragraphs = currentText.trim().split("\n\n")
+				let lastParagraph = paragraphs[paragraphs.length - 1]
+				sendScrapeRequest(getImportantWords(lastParagraph))
 			}
 		}
 		if (paragraphCount >= getParaCount(currentText)) {
@@ -57,6 +60,34 @@ $(() => {
 			}
 		}
 	})
+
+	function getImportantWords(paragraph) {
+		let words = paragraph.trim().split(" ").map(x => x.trim())
+		if (words.length === 0) {
+			console.log("WARN: words.length === 0")
+			return []
+		}
+
+		let actualWords = words.filter(word => word.length > 1)
+		if (actualWords.length === 0) {
+			console.log("WARN: actualWords.length === 0")
+			return []
+		}
+
+		let importantWords = words.filter(word => word.length >= IMPORTANT_WORD_LENGTH)
+		if (importantWords.length === 0) {
+			return [actualWords[Math.floor(random()*actualWords.length)]]
+		} else {
+			return importantWords
+		}
+	}
+
+	function sendScrapeRequest(words) {
+		for (let word of words) {
+			socket.emit("search", word)
+			console.log("emit search for '" + word + "'")
+		}
+	}
 
 	function getParaCount(txt) {
 		return (txt.match(/\n\n/g) || []).length
