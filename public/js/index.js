@@ -1,31 +1,12 @@
 $(() => {
 	const IMPORTANT_WORD_LENGTH = 5
-	let imageDir = "../img/"
 	let currentText = ""
 	let paragraphCount = 0
 	let itemIds = []
 	let resourceList = []
 	let socket = io()
 
-	function initImages() {
-		return ["img1.jpg", "img2.jpg", "img3.jpg", "img4.gif", "img5.gif", "img6.gif", "img7.jpg", "img8.jpg",
-		"img11.jpg", "img9.jpg", "img10.jpg"]
-			.map((x) => x = imageDir + x)
-	}
-
-	let images = initImages()
-
-	function getRandomImage() {
-		if (images.length < 1) {
-			images = initImages()
-		}
-		let index = Math.floor(Math.random()*images.length)
-		let removedItem = images[index]
-		images.splice(index, 1)
-		return removedItem
-	}
-
-	function addItem(source = getRandomImage()) {
+	function addItem(source) {
 		let id = itemIds.length.toString() + "-resource-item"
 		itemIds.push(id)
 		let resourceItem = "<img id="+id+" class='resource hover-shadow slideLeftFadeIn' src="+source+">"
@@ -93,7 +74,6 @@ $(() => {
 		return (txt.match(/\n\n/g) || []).length
 	}
 
-
 	$("#choose-files-btn").bind("change", (e) => {
 		let input = e.target
 		if (input.files && input.files[0]) {
@@ -115,5 +95,4 @@ $(() => {
 		sessionStorage.headingList = headingList
 		window.open("../draft.html", "_self")
 	})
-
 })
