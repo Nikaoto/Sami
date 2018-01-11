@@ -13,7 +13,7 @@ $(() => {
 		$("#resource-list").append(resourceItem)
 	}
 
-	socket.on("scrape result", result => { addItem(result.url) })
+	socket.on("scrape result", result => { addItem(result.thumb) })
 
 	function removeItem() {
 		$("#"+itemIds[itemIds.length-1].toString()).remove()
