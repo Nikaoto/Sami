@@ -1,35 +1,19 @@
 $(() => {
-	let imageDir = "../img/"
+	const IMPORTANT_WORD_LENGTH = 5
 	let currentText = ""
 	let paragraphCount = 0
 	let itemIds = []
 	let resourceList = []
 	let socket = io()
 
-	function initImages() {
-		return ["img1.jpg", "img2.jpg", "img3.jpg", "img4.gif", "img5.gif", "img6.gif", "img7.jpg", "img8.jpg",
-		"img11.jpg", "img9.jpg", "img10.jpg"]
-			.map((x) => x = imageDir + x)
-	}
-
-	let images = initImages()
-
-	function getRandomImage() {
-		if (images.length < 1) {
-			images = initImages()
-		}
-		let index = Math.floor(Math.random()*images.length)
-		let removedItem = images[index]
-		images.splice(index, 1)
-		return removedItem
-	}
-
-	function addItem(source = getRandomImage()) {
+	function addItem(source) {
 		let id = itemIds.length.toString() + "-resource-item"
 		itemIds.push(id)
 		let resourceItem = "<img id="+id+" class='resource hover-shadow slideLeftFadeIn' src="+source+">"
 		$("#resource-list").append(resourceItem)
 	}
+
+	socket.on("scrape result", result => { addItem(result.thumb) })
 
 	function removeItem() {
 		$("#"+itemIds[itemIds.length-1].toString()).remove()
@@ -43,10 +27,10 @@ $(() => {
 		if (paragraphCount < getParaCount(currentText)) {
 			for (i=0; i<=getParaCount(currentText) - paragraphCount; i++) {
 				paragraphCount++
-				// TODO - emit request
-				addItem()
 
-				console.log("ADD RESOURCE")
+				let paragraphs = currentText.trim().split("\n\n")
+				let lastParagraph = paragraphs[paragraphs.length - 1]
+				sendScrapeRequest(getImportantWords(lastParagraph))
 			}
 		}
 		if (paragraphCount >= getParaCount(currentText)) {
@@ -58,10 +42,37 @@ $(() => {
 		}
 	})
 
+	function getImportantWords(paragraph) {
+		let words = paragraph.trim().split(" ").map(x => x.trim())
+		if (words.length === 0) {
+			console.log("WARN: words.length === 0")
+			return []
+		}
+
+		let actualWords = words.filter(word => word.length > 1)
+		if (actualWords.length === 0) {
+			console.log("WARN: actualWords.length === 0")
+			return []
+		}
+
+		let importantWords = words.filter(word => word.length >= IMPORTANT_WORD_LENGTH)
+		if (importantWords.length === 0) {
+			return [actualWords[Math.floor(random()*actualWords.length)]]
+		} else {
+			return importantWords
+		}
+	}
+
+	function sendScrapeRequest(words) {
+		for (let word of words) {
+			socket.emit("search", word)
+			console.log("emit search for '" + word + "'")
+		}
+	}
+
 	function getParaCount(txt) {
 		return (txt.match(/\n\n/g) || []).length
 	}
-
 
 	$("#choose-files-btn").bind("change", (e) => {
 		let input = e.target
@@ -84,5 +95,4 @@ $(() => {
 		sessionStorage.headingList = headingList
 		window.open("../draft.html", "_self")
 	})
-
 })
