@@ -1,5 +1,6 @@
 $(() => {
 	const IMPORTANT_WORD_LENGTH = 5
+	const PARAGRAPH_DELIMITER = "\n"
 	let currentText = ""
 	let paragraphCount = 0
 	let itemIds = []
@@ -28,7 +29,7 @@ $(() => {
 			for (i=0; i<=getParaCount(currentText) - paragraphCount; i++) {
 				paragraphCount++
 
-				let paragraphs = currentText.trim().split("\n\n")
+				let paragraphs = currentText.trim().split(PARAGRAPH_DELIMITER)
 				let lastParagraph = paragraphs[paragraphs.length - 1]
 				sendScrapeRequest(getImportantWords(lastParagraph))
 			}
@@ -71,7 +72,14 @@ $(() => {
 	}
 
 	function getParaCount(txt) {
-		return (txt.match(/\n\n/g) || []).length
+		const len = PARAGRAPH_DELIMITER.length
+		let count = 0
+		for (let i in txt) {
+			if (txt.substr(i, len) === PARAGRAPH_DELIMITER) {
+				count ++
+			}
+		}
+		return count
 	}
 
 	$("#choose-files-btn").bind("change", (e) => {
