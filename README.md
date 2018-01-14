@@ -15,4 +15,4 @@ https://slami.herokuapp.com/
 - [ ] Remove resource func
 - [ ] Persist resources for next page
 - [ ] Rearrange files and structure
-- [ ] Separate paragraphs with only one '\n'
+- [x] Separate paragraphs with only one '\n'
