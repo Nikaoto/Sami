@@ -4,27 +4,53 @@ $(() => {
 
 	const SLIDE_BREAK_KEY = "Enter"
 	const SLIDE_REMOVE_KEY = "Backspace"
-	const SLIDE_BREAK_SYMBOL = "¶"
+	const SLIDE_BREAK_SYMBOL = "\u21B5"
 
 	let currentText = ""
 	let paragraphCount = 0
 	let itemIds = []
-	let resourceList = []
+	let mediaItems = []
 	let socket = io()
 
-	function addItem(source) {
-		let id = itemIds.length.toString() + "-resource-item"
-		itemIds.push(id)
-		let resourceItem = "<img id="+id+" class='resource hover-shadow slideLeftFadeIn' src="+source+">"
-		$("#resource-list").append(resourceItem)
-	}
-
 	socket.on("scrape result", result => { 
-		console.log(result)
-		// add result.url to some array
+		// add result.mediaurl to some array
 
 		if (result && result.mediaurl) addItem(result.mediaurl)
 	})
+
+	function addItem(source) {
+		if (mediaItems[paragraphCount] === undefined) {
+			console.log("creating new paragraph result array")
+			mediaItems[paragraphCount] = []
+		}
+
+		let id = "p" + paragraphCount.toString() + "i" + mediaItems[paragraphCount].length + "-resource-item"
+		mediaItems[paragraphCount].push(id) // TODO create mediaItem obj w/ constructor
+
+		//let id = itemIds.length.toString() + "-resource-item"
+		//itemIds.push(id)
+
+		let resourceItem = "<img id="+id+" class='resource hover-shadow slideLeftFadeIn' src="+source+">"
+		$("#resource-list").append(resourceItem)
+
+		console.log(mediaItems)
+	}
+
+	function removeMediaItems(paragraphIndex) {
+		if (mediaItems[paragraphIndex] !== undefined) {
+			mediaItems[paragraphIndex].forEach(el => {
+				console.log(el)
+				removeItemWithId(el)
+			}) // TODO change this after adding MeiaItem class
+			mediaItems[paragraphIndex] = []
+		}
+	}
+
+	function removeItemWithId(id) {
+		$("#"+id.toString()).remove()
+		console.log("removing mediaItem "+ id.toString())
+		itemIds.pop(itemIds.length-1)
+	}
 
 	function removeItem() {
 		$("#"+itemIds[itemIds.length-1].toString()).remove()
@@ -58,8 +84,13 @@ $(() => {
 			sendScrapeRequest(scrapeQueries)
 
 		} else if(e.key === SLIDE_REMOVE_KEY) {
-			console.log("SLIDE REMOVE")
 
+			if (paragraphCount > getParagraphCount($("#content-textarea").val())) {
+				console.log("SLIDE REMOVE")
+
+				removeMediaItems(paragraphCount)
+				paragraphCount--
+			}
 		}
 	})
 
@@ -112,7 +143,11 @@ $(() => {
 		}
 	}
 
-	function getParagraphCount(txt, delimiter) {
+	function getParagraphs(txt, delimiter = SLIDE_BREAK_SYMBOL) {
+		return txt.trim().split(delimiter)
+	}
+
+	function getParagraphCount(txt, delimiter = SLIDE_BREAK_SYMBOL) {
 		const len = delimiter.length
 		let count = 0
 		for (let i in txt) {
