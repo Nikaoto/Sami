@@ -1,6 +1,11 @@
 $(() => {
-	const IMPORTANT_WORD_LENGTH = 5
+	const IMPORTANT_WORD_LENGTH = 4
 	const PARAGRAPH_DELIMITER = "\n"
+
+	const SLIDE_BREAK_KEY = "Enter"
+	const SLIDE_REMOVE_KEY = "Backspace"
+	const SLIDE_BREAK_SYMBOL = "¶"
+
 	let currentText = ""
 	let paragraphCount = 0
 	let itemIds = []
@@ -14,7 +19,12 @@ $(() => {
 		$("#resource-list").append(resourceItem)
 	}
 
-	socket.on("scrape result", result => { addItem(result.thumb) })
+	socket.on("scrape result", result => { 
+		console.log(result)
+		// add result.url to some array
+
+		if (result && result.mediaurl) addItem(result.mediaurl)
+	})
 
 	function removeItem() {
 		$("#"+itemIds[itemIds.length-1].toString()).remove()
@@ -22,26 +32,57 @@ $(() => {
 		itemIds.pop(itemIds.length-1)
 	}
 
-	$("#content-textarea").bind("input propertychange", (e) => {
+	// Listening for slide break
+	$("#content-textarea").keydown((e) => {
+		if (e.key === SLIDE_BREAK_KEY) {
+			console.log("SLIDE ADD")
+
+			let currentText = $("#content-textarea").val()
+			$("#content-textarea").val(currentText + SLIDE_BREAK_SYMBOL)
+
+			currentText = currentText.replace(/\r?\n?/g, '')
+			paragraphCount++
+
+			let paragraphs = currentText.trim().split(SLIDE_BREAK_SYMBOL)
+			console.log("paragraphs:", paragraphs)
+
+			// Scrape only last paragraph, prepare it for scraping
+			let lastParagraph = paragraphs[paragraphs.length - 1]
+			let scrapeQueries = getImportantWords(lastParagraph)
+
+			// Add whole paragraph as search
+			if (scrapeQueries[0] !== lastParagraph) {
+				scrapeQueries.push(lastParagraph)
+			}
+
+			sendScrapeRequest(scrapeQueries)
+
+		} else if(e.key === SLIDE_REMOVE_KEY) {
+			console.log("SLIDE REMOVE")
+
+		}
+	})
+
+	/*$("#content-textarea").bind("input propertychange", (e) => {
 		console.log("text changed")
 		currentText = $("#content-textarea").val()
-		if (paragraphCount < getParaCount(currentText)) {
-			for (i=0; i<=getParaCount(currentText) - paragraphCount; i++) {
+		if (paragraphCount < getParagraphCount(currentText, PARAGRAPH_DELIMITER)) {
+			for (i=0; i<=getParagraphCount(currentText, PARAGRAPH_DELIMITER) - paragraphCount; i++) {
 				paragraphCount++
-
+				console.log("ADD RESOURCE")	
 				let paragraphs = currentText.trim().split(PARAGRAPH_DELIMITER)
 				let lastParagraph = paragraphs[paragraphs.length - 1]
 				sendScrapeRequest(getImportantWords(lastParagraph))
 			}
 		}
-		if (paragraphCount >= getParaCount(currentText)) {
-			for (i=0; i<paragraphCount-getParaCount(currentText); i++) {
+		if (paragraphCount >= getParagraphCount(currentText, PARAGRAPH_DELIMITER)) {
+			for (i=0; i<paragraphCount-getParagraphCount(currentText, PARAGRAPH_DELIMITER); i++) {
 				paragraphCount--
 				removeItem()
 				console.log("REMOVE RESOURCE")	
 			}
 		}
-	})
+	})*/
 
 	function getImportantWords(paragraph) {
 		let words = paragraph.trim().split(" ").map(x => x.trim())
@@ -71,11 +112,11 @@ $(() => {
 		}
 	}
 
-	function getParaCount(txt) {
-		const len = PARAGRAPH_DELIMITER.length
+	function getParagraphCount(txt, delimiter) {
+		const len = delimiter.length
 		let count = 0
 		for (let i in txt) {
-			if (txt.substr(i, len) === PARAGRAPH_DELIMITER) {
+			if (txt.substr(i, len) === delimiter) {
 				count ++
 			}
 		}

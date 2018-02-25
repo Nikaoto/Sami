@@ -2,13 +2,14 @@ let express = require("express")
 let app = express()
 let http = require("http").createServer(app)
 let io = require("socket.io")(http)
-let BingScraper = require("./lib/bing-image-scraper")
+let BingScraper = require("./lib/bing-scraper")
 
 const PORT = process.env.PORT || 5000
 const scraper = new BingScraper()
 
 function getOneResult(results) {
-	return results[Math.floor(Math.random() * (results.length - 1))]
+	return results[0]
+	//return results[Math.floor(Math.random() * (results.length - 1))]
 }
 
 app.use(express.static("public"))
@@ -21,9 +22,8 @@ io.on("connection", (socket) => {
 	console.log("user connected")
 
 	socket.on("search", (query) => {
-		scraper.scrape(query).then((results) => {
+		scraper.scrape(query.toString("utf8")).then((results) => {
 			result = getOneResult(results)
-			console.log("server.js: result =", result)
 			socket.emit("scrape result", result)
 		})
 	})
