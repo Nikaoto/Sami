@@ -1,18 +1,9 @@
-# Slami
+# slami-hackathon
+*Dec 23, 2017 - Dec 24, 2017*
 
-https://slami.herokuapp.com/
+Media hackathon entry. 
+---
 
-
-# TODO
-- [ ] Important word filters
-	- conjuctions
-	- determiners
-	- interjections
-	- ALL CAPS - automatically important
-- [ ] Paragraph delete bug
-- [ ] Paragraph edit func (remove item on word removed?)
-- [ ] Select resource func for next page
-- [ ] Remove resource func
-- [ ] Persist resources for next page
-- [ ] Rearrange files and structure
-- [x] Separate paragraphs with only one '\n'
+Scraps images dynamically while you type. Then assembles your text and images and generates a 
+slideshow-video in `.webm` format using a canvas hack with 
+[`whammy.js`](https://github.com/antimatter15/whammy).
