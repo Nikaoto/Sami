@@ -3,7 +3,7 @@
 
 Media hackathon entry & winner.
 
---
+---
 
 Scrapes images dynamically while you type. Then assembles your text and images and generates a 
 slideshow-video in `.webm` format using a canvas hack with 
