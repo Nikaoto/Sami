@@ -14,4 +14,4 @@ Scraps images dynamically while you type. Then assembles your text and images an
 The project has been fully realized and is available here: https://github.com/Nikaoto/Slami
 
 ### License
-MIT. Refer to LICENSE for more details.
+Anyone is free to use this in any way they wish. Refer to LICENSE for more details.
